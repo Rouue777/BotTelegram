@@ -21,9 +21,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//importar scenes
+//importar scenes agendamentos
 import pegarNome from './scenes/agendamento/pegarNome.js'
 import apreServicos from "./scenes/agendamento/apreServicos.js";
+import agendar from "./scenes/agendamento/agendar.js";
+
+//importar scenes cancelar agendamentos
+import agendamentoToCancel from "./scenes/cancelarAgendamento/agendamentoToCancel.js";
+
+//importar scenes consultar agendamentos
+import agendametoCheck from "./scenes/checarAgendamentos/agendamentosCheck.js";
 
 //conectando e instanciando api do telegram
 const bot = new Telegraf("7884544168:AAE99cV406qoYl9-CZ58cao2E1t0V65v_IY", {
@@ -33,7 +40,7 @@ const bot = new Telegraf("7884544168:AAE99cV406qoYl9-CZ58cao2E1t0V65v_IY", {
 });
 
 // Instanciando o Stage e adicionando as cenas
-const stage = new Stage([pegarNome,apreServicos]);
+const stage = new Stage([pegarNome,apreServicos,agendar,agendamentoToCancel,agendametoCheck]);
 
 //configurando session do bot
 bot.use(session());

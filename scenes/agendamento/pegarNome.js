@@ -27,7 +27,10 @@ pegarNome.enter(async (ctx) => {
         chatid_telegram: chatIdCliente
       });
       ctx.reply(
-        "Olá Esse é o nosso sistema de Agendamento para uma melhor experiencia poderia nos dizer seu nome?"
+        '👋 Olá!\n\n' +
+        'Este é o nosso sistema de agendamento para oferecer uma melhor experiência para você. 📅✨\n\n' +
+        'Para começarmos, poderia nos informar o seu nome? 🤔\n' +
+        'Fique à vontade, estamos aqui para ajudar! 😊'
       );
     }
   } catch (erros) {
