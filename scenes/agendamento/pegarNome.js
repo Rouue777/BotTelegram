@@ -45,8 +45,9 @@ pegarNome.on("text", async (ctx) => {
     const nomeCliente = ctx.message.text;
     ctx.session.nome = ctx.message.text;
 
-    //pegar caht id para associar ao nome
+    //pegar chat id para associar ao nome
     const chatIdCliente = ctx.chat.id;
+    ctx.session.chatIdAtual = ctx.chat.id
 
     //salvar nome no banco de dados
     await  Usuario.update(
