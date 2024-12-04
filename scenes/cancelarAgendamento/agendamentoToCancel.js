@@ -19,8 +19,19 @@ agendamentoToCancel.enter(async (ctx) => {
     });
     if (agendamentosLista.length == 0) {
       //caso o usuario não possua agendamentos
-      await ctx.reply("Infelizmente você não possui agendamentos!");
-      return ctx.scene.enter('apreServicos')
+      await ctx.reply(
+        "Infelizmente você não possui agendamentos! Deseja fazer algum agendamento?",
+        {
+          reply_markup: {
+            inline_keyboard: [
+              [
+                { text: "Sim", callback_data: "agendar_sim" },
+                { text: "Não, encerrar", callback_data: "encerrar" },
+              ],
+            ],
+          },
+        }
+      );
     } else {
       //mensagem de entrada para cancelar agendamento
       ctx.reply(
@@ -112,6 +123,18 @@ agendamentoToCancel.on("callback_query", async (ctx) => {
     //pegar valor da resposta
     const respostaCliente = ctx.callbackQuery.data;
 
+    //condicional para tratar resposta do usuario
+    if (respostaCliente == "agendar_sim") {
+      //direcioanra para agendar
+      await ctx.scene.enter("agendar");
+    } else if (respostaCliente == "encerrar") {
+      //aprensentar mensagem de finalização e então finalizar
+      await ctx.reply(
+        "Entendemos que você deseja encerrar o serviço. Se precisar de mais alguma coisa no futuro, não hesite em nos procurar! 😊\n\nDigite /start para recomeçar e acessar outros serviços quando necessário."
+      );
+      await ctx.scene.leave();
+    }
+
     if (respostaCliente == "confirmar_apagar") {
       //logica para apagar
       const idAgendamento = ctx.session.idAgendamento;
@@ -130,7 +153,7 @@ agendamentoToCancel.on("callback_query", async (ctx) => {
       //verificar se so agendamento foi deletado
       if (resultadoDeletion === 1) {
         await ctx.reply("✅ O agendamento foi apagado com sucesso!");
-        await ctx.reply('Se precisar de algo digite /start!')
+        await ctx.reply("Caso necessite de assistência, digite /start para iniciar o atendimento novamente");
       } else {
         await ctx.reply(
           "❌ Não foi possível apagar o agendamento. Tente novamente. Se precisar de algo digite /start"
