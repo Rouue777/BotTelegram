@@ -93,6 +93,11 @@ agendamentoToCancel.on("text", async (ctx) => {
     }
     //pegar no db o agendamento correspondente ao digitado pelo cliente no chat
     const agendamentoToDelete = listaAgendamentos[numAgendamento];
+    //verificar se é undefined o numero digitado pelo cliente
+    if(agendamentoToDelete == null || agendamentoToDelete == typeof undefined){
+      await ctx.reply('🚨Digite um numero de agendamento existente!')
+      return ctx.scene.enter('agendamentoToCancel');
+    }
     //pegar id do agendamento para poder apagar no banco de dados / salvar em varavel de ambiente para nao precisar pegar toda hora o valor
     ctx.session.idAgendamento = agendamentoToDelete.id;
     //confrimacao para deletar
@@ -137,15 +142,8 @@ agendamentoToCancel.on("callback_query", async (ctx) => {
 
     if (respostaCliente == "confirmar_apagar") {
       //logica para apagar
-      const idAgendamento = ctx.session.idAgendamento;
-      //verificar existencia do id
-      if (!idAgendamento) {
-        await ctx.reply(
-          "❌ Não foi possível encontrar o agendamento para deletar."
-        );
-        return;
-      }
-
+      const idAgendamento = ctx.session.idAgendamento; 
+         
       ///buscar agendamento no banco de dados
       const resultadoDeletion = await Agendamento.destroy({
         where: { id: idAgendamento },
@@ -170,7 +168,7 @@ agendamentoToCancel.on("callback_query", async (ctx) => {
   } catch (erros) {
     console.error("Deu erro logica de deletar " + erros);
     await ctx.reply(
-      "Ocorreu um erro ao tentar processar seu pedido. Tente novamente mais tarde."
+      "Ocorreu um erro ao tentar processar seu pedido. Tente novamente mais tarde." + erros
     );
   }
 });
